@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { useState, useEffect, useRef } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
@@ -49,22 +50,25 @@ const CharList = (props) => {
             }
 
             return (
-                <li 
-                    className={classCharName}
-                    key={item.id}
-                    onClick={() => {
-                        props.onCharSelected(item.id);
-                        setActive(item.id)}}>
-                        <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
-                        <div className="char__name">{item.name}</div>
-                </li>
+                <CSSTransition key={item.id} timeout={500} classNames="char__item">
+                    <li 
+                        className={classCharName}
+                        onClick={() => {
+                            props.onCharSelected(item.id);
+                            setActive(item.id)}}>
+                            <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                            <div className="char__name">{item.name}</div>
+                    </li>
+                </CSSTransition>
             )
         })
 
-        return(
-            <ul className="char__grid">
-                {items}
-            </ul> 
+        return (
+                <ul className="char__grid">
+                    <TransitionGroup component={null}>
+                        {items}
+                    </TransitionGroup>
+                </ul> 
         )
     }
 
